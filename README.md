@@ -22,10 +22,11 @@
 dependencies: [
     .package(url: "https://github.com/zhtut/default-codable.git", from: "1.0.0")
 ]
+```
 
 # 使用方法
 基本用法
-swift
+```swift
 import DefaultCodable
 
 struct User: Codable {
@@ -47,10 +48,12 @@ let json = """
 let user = try JSONDecoder().decode(User.self, from: json)
 print(user) 
 // User(isActive: true, name: "123", age: 25, score: 9.5)
-自定义类型支持
+```
+
+## 自定义类型支持
 你可以为任何自定义类型添加默认值支持：
 
-swift
+```swift
 enum Status: String, DefaultValue, Codable {
     case active
     case inactive
@@ -71,8 +74,9 @@ let json = """
 
 let account = try JSONDecoder().decode(Account.self, from: json)
 print(account.status) // .pending
-可选值支持
-swift
+```
+## 可选值支持
+```swift
 struct Post: Codable {
     @Default var title: String?
     @Default var views: Int
@@ -98,8 +102,9 @@ let json2 = """
 let post2 = try JSONDecoder().decode(Post.self, from: json2)
 print(post2.title) // nil
 print(post2.views) // 0
-嵌套结构
-swift
+```
+## 嵌套结构
+```swift
 struct Address: Codable {
     @Default var street: String
     @Default var city: String
@@ -108,7 +113,7 @@ struct Address: Codable {
 
 struct Company: Codable {
     @Default var name: String
-    @Default var address: Address
+    var address: Address
 }
 
 let json = """
@@ -126,69 +131,64 @@ print(company.name) // "12345"
 print(company.address.street) // "123"
 print(company.address.city) // "true"
 print(company.address.zipCode) // ""
-实现原理
+```
+# 实现原理
 DefaultValue 协议
-swift
+```swift
 public protocol DefaultValue: Codable {
     static var defaultValue: Self { get }
 }
+```
 任何遵循 DefaultValue 协议的类型都需要提供一个默认值。库已为常见类型提供了默认实现：
 
-Bool: false
-
-String: ""
-
-Int: 0
-
-Double: 0.0
-
-Optional: nil
+* `Bool`: `false`
+* `String`: `""`
+* `Int`: `0`
+* `Double`: `0.0`
+* `Optional`: `nil`
 
 @Default 属性包装器
-swift
+```swift
 @propertyWrapper
 public struct Default<T: DefaultValue>: Codable {
     public var wrappedValue: T
     // ...
 }
+```
 属性包装器负责处理解码逻辑，当类型不匹配时会尝试类型转换。
 
-解码过程
+## 解码过程
 尝试标准解码：首先尝试用声明的类型解码
 
 类型修复：如果失败，尝试从其他类型转换：
 
-Bool ← String/Int/Double
-
-String ← Bool/Int/Double
-
-Int/Double ← Bool/String
+* `Bool` ← String/Int/Double
+* `String` ← Bool/Int/Double
+* `Int/Double` ← Bool/String
 
 回退默认值：如果所有尝试都失败，则返回 defaultValue
 
 类型转换规则
-目标类型	源类型	转换示例
-Bool	String	"true" → true
-Bool	Int/Double	1 → true, 0 → false
-String	Bool	true → "true"
-String	Int/Double	123 → "123"
-Int	String	"123" → 123
-Int	Double	3.14 → 3
-Double	String	"3.14" → 3.14
-Double	Int	3 → 3.0
-支持的平台
-iOS
+| 目标类型 | 源类型       | 转换示例                     |
+|----------|-------------|----------------------------|
+| Bool     | String      | "true" → true              |
+| Bool     | Int/Double  | 1 → true, 0 → false        |
+| String   | Bool        | true → "true"              |
+| String   | Int/Double  | 123 → "123"                |
+| Int      | String      | "123" → 123                |
+| Int      | Double      | 3.14 → 3                   |
+| Double   | String      | "3.14" → 3.14              |
+| Double   | Int         | 3 → 3.0                    |
 
-macOS
+## 支持的平台
+* iOS
+* macOS
+* watchOS
+* tvOS
+* visionOS
 
-watchOS
-
-tvOS
-
-visionOS
-
-贡献
+# 贡献
 欢迎提交问题和拉取请求！
 
-许可证
-MIT License
+# 许可证
+Apache 2.0
