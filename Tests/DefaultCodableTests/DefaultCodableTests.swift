@@ -69,6 +69,16 @@ func decode(_ dict: [String: Any?]) throws -> Student {
     return model
 }
 
+@Test func testEncode() async throws {
+    let student = Student.init(name: "张三", age: 18, male: true, money: 100.0, like: .ball)
+    let data = try JSONEncoder().encode(student)
+    let dict = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
+    #expect(dict?["name"] as? String == "张三")
+    #expect(dict?["age"] as? Int == 18)
+    #expect(dict?["male"] as? Bool == true)
+    #expect(dict?["money"] as? Double == 100.0)
+}
+
 @Test func testBool() async throws {
     #expect(try decode([:]).male == false)
     #expect(try decode(["male": "1"]).male == true)

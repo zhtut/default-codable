@@ -19,6 +19,12 @@ public struct Default<T: DefaultValue>: Codable {
     }
 }
 
+public extension KeyedEncodingContainer {
+    mutating func encode<T: DefaultValue>(_ value: Default<T>, forKey key: KeyedEncodingContainer<K>.Key) throws where T : CustomStringConvertible{
+        try encodeIfPresent(value.wrappedValue, forKey: key)
+    }
+}
+
 extension KeyedDecodingContainer {
     /// 实现解析Default属性包装器的方法，decode Default类型的属性时，会优先进这个方法
     func decode<T: DefaultValue>(_ type: Default<T>.Type, forKey key: K) throws -> Default<T> {
