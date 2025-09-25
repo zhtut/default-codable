@@ -37,3 +37,13 @@ extension Double: DefaultValue {
 extension Int: DefaultValue {
     public static var defaultValue: Int { 0 }
 }
+
+/// 数组的默认值是空数组
+extension Array: DefaultValue where Element: Codable {
+    public static var defaultValue: Array { [] }
+}
+
+/// 字典的默认值是空字典
+extension Dictionary: DefaultValue where Key: Codable, Value: Codable {
+    public static var defaultValue: Dictionary { [:] }
+}
