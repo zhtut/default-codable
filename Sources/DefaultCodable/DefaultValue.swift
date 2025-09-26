@@ -8,7 +8,7 @@
 import Foundation
 
 /// 默认属性的协议
-public protocol DefaultValue: Codable {
+public protocol DefaultValue: Codable, Sendable {
     /// 提供一个默认静态实例
     static var defaultValue: Self { get }
 }

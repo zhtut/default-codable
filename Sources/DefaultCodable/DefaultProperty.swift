@@ -10,7 +10,7 @@ import Foundation
 
 /// 属性包装器
 @propertyWrapper
-public struct Default<T: DefaultValue>: Codable {
+public struct Default<T: DefaultValue>: Codable, Sendable {
     
     public var wrappedValue: T
     
