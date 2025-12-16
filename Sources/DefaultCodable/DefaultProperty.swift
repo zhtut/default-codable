@@ -25,7 +25,7 @@ public extension KeyedEncodingContainer {
     }
 }
 
-extension KeyedDecodingContainer {
+public extension KeyedDecodingContainer {
     /// 实现解析Default属性包装器的方法，decode Default类型的属性时，会优先进这个方法
     func decode<T: DefaultValue>(_ type: Default<T>.Type, forKey key: K) throws -> Default<T> {
         // 尝试使用T的类型去解，如果成功，则类型是对的
